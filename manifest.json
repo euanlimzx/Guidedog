@@ -4,7 +4,13 @@
   "description": "Screenshot MVP",
   "version": "1.0",
   "action": {},
-  "permissions": ["activeTab", "tabs", "scripting"],
+  "permissions": ["activeTab", "tabs"],
+  "content_scripts": [
+    {
+      "js": ["content-script.js"],
+      "matches": ["https://*/*"]
+    }
+  ],
   "background": {
     "service_worker": "background.js"
   }

@@ -10,14 +10,16 @@ chrome.action.onClicked.addListener(async (tab) => {
       tabId: tab.id,
       text: "ON",
     });
-    chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      files: ["content-script.js"],
+    const response = await chrome.tabs.sendMessage(tab.id, {
+      state: "ON",
     });
   } else {
     await chrome.action.setBadgeText({
       tabId: tab.id,
       text: "OFF",
+    });
+    const response = await chrome.tabs.sendMessage(tab.id, {
+      state: "OFF",
     });
   }
 });

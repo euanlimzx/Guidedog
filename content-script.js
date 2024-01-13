@@ -9,8 +9,25 @@ translucentDiv.style.borderRadius = "50%"; // Add rounded corners if desired
 translucentDiv.style.zIndex = "9999";
 translucentDiv.style.transition = "400ms";
 
+var state = "OFF";
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  console.log(
+    sender.tab
+      ? "from a content script:" + sender.tab.url
+      : "from the extension"
+  );
+  if (request.state === "ON") {
+    state = "ON";
+  } else {
+    state = "OFF";
+  }
+});
+
 document.addEventListener("click", function (e) {
-  chrome.runtime.sendMessage({ action: "takeScreenshot" });
+  if (state == "OFF") {
+    return;
+  }
+
   // Send a message to the background script requesting a screenshot
   console.log("sending message now");
   // Create a new div element
@@ -27,4 +44,5 @@ document.addEventListener("click", function (e) {
   setTimeout(function () {
     translucentDiv.style.display = "none";
   }, 2000); // Remove the div after 3 seconds (adjust as needed)
+  chrome.runtime.sendMessage({ action: "takeScreenshot" });
 });
